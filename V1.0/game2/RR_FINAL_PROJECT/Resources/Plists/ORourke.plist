@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>oRourkeWalkIn</key>
+	<dict>
+		<key>animationFrames</key>
+		<string>1,2,3,4,5,6,7,8</string>
+		<key>delay</key>
+		<real>0.25</real>
+		<key>filenamePrefix</key>
+		<string>orourke_walk_in_</string>
+	</dict>
+	<key>oRourkeWalkOut</key>
+	<dict>
+		<key>animationFrames</key>
+		<string>1,2,3,4,5,6,7,8</string>
+		<key>delay</key>
+		<real>0.25</real>
+		<key>filenamePrefix</key>
+		<string>orourke_walk_out_</string>
+	</dict>
+</dict>
+</plist>

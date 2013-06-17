@@ -1,0 +1,103 @@
+//
+//  Receipt.m
+//  game2
+//
+//  Created by Ronan Sean on 16/02/2013.
+//  Copyright (c) 2013 Ronan Sean. All rights reserved.
+//
+// Class Description Below:
+//
+// This class is a composite object. It is added to the LevelGameplay layer as a child and has a sprite added to
+// itself.
+//
+// This class is a subclass of CCNode and conforms to the CCTouchOneByOneDelegate in order for it to handle
+// touch events. The class itself contains a sprite, made from an image of a receipt. This receipt 
+// added to the main gameplaylayer. If this object is touched it will send a message to the gameplay layer
+// informing it that this object has been touched.
+//
+// The touch handling technuiques in this class were learned, taken and adpated from the tutorial below
+// by Bob Euland:
+//
+// http://bobueland.com/cocos2d/2011/touchdispatcher-secrets/
+//
+// PLEASE NOTE: RATHER THAN REPEAT THE SAME COMMENTS FOR THE KEY, RECEIPT, TOUCHDOOR & TOUCH PICTURE CLASSES
+//
+// PLEASE GO TO: Classes/Game Objects/Level Icons/Key.h and Key.m
+//
+// FOR DETAILED DESCRIPTION OF WHAT IS GOING ON IN A TOUCHABLE OBJECT
+
+#import "Receipt.h"
+#import "LevelGameplay.h"
+
+@implementation Receipt
+@synthesize receiptSprite, gameplayLayer;
+
+-(id)initWithLayer:(LevelGameplay *)layer
+{
+    self = [super init];
+    CCLOG(@"RECEIPT INITIATED");
+    if (self)
+    {
+            self.gameplayLayer=layer;
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            self.receiptSprite = [CCSprite spriteWithFile:@"receipt_icon-ipadhd.png"];
+        }
+        else
+        {
+            self.receiptSprite = [CCSprite spriteWithFile:@"receipt_icon-widehd.png"];
+        }
+        
+        [self addChild:receiptSprite z:kInvisiItemsZvalue];
+    }
+    return self;
+}
+
+-(float)returnObjectHeight
+{
+    CCLOG(@"STANLEY returnHalfCharacterWidth CALLED");
+    float objectSize = receiptSprite.contentSize.height;
+    CCLOG(@"Receipt height is: %f", objectSize);
+    return objectSize;
+}
+
+- (void)dealloc
+{
+    CCLOG(@"RECEIPT dealloc CALLED");
+    [super dealloc];
+}
+
+//onEnter
+- (void)onEnter
+{
+    CCLOG(@"RECEIPT onEnter CALLED");
+    [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+    [super onEnter];
+}
+
+//onExit
+- (void)onExit
+{
+    CCLOG(@"RECEIPT onExit CALLED");
+    [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+    [super onExit];
+}
+
+-(BOOL)containsTouch:(UITouch *)touch
+{
+    CCLOG(@"RECEIPT containsTouch CALLED");
+    CGRect r = [receiptSprite textureRect];
+    CGPoint p =[receiptSprite convertTouchToNodeSpace:touch];
+    return CGRectContainsPoint(r, p );
+}
+
+-(BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
+{
+    if (![self containsTouch:touch]) return NO;
+    CCLOG(@"RECEIPT ccTouchBegan CALLED");
+    
+    [gameplayLayer itemToPickUpTouched:kRemoveObjectTypeReceipt];
+    
+    return YES;
+}
+@end

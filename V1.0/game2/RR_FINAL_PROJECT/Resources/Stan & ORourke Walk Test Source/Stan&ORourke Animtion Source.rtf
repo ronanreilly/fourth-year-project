@@ -1,0 +1,530 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red243\green235\blue0;\red255\green255\blue51;\red170\green13\blue145;
+\red63\green110\blue116;\red38\green71\blue75;\red92\green38\blue153;\red100\green56\blue32;\red46\green13\blue110;
+\red0\green116\blue0;\red196\green26\blue22;\red28\green0\blue207;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww23280\viewh14220\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 \cb2 \ul \ulc0 GameplayLayer init Methods\cb1 \
+\
+\cb3 Animation Tests Stan & ORourke\cb1 \
+\
+----------        Stan Walking Right        ---------------\
+\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf4 \ulnone \CocoaLigature0 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *stanFramesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *stanSpriteBatchNode;\
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 .m code\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];    \cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 2\cf0 ; i < \cf12 7\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_walk_right_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 stanFramesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf10 // Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \
+        \cf10 // Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+\
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_right_1.png"\cf0 ];\
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (\cf12 100\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+        [\cf5 stanSpriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 stanSpriteBatchNode\cf0 ];\
+        \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 ----------        Stan Walking Left        ---------------\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf4 \ulnone \CocoaLigature0 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *stanFramesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *stanSpriteBatchNode;\
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+\cf0 .m code\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];    \cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 2\cf0 ; i < \cf12 7\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_walk_left_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 stanFramesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf10 // Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \
+        \cf10 // Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+\
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_left_1.png"\cf0 ];\
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0  - \cf12 100.0f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+        [\cf5 stanSpriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 stanSpriteBatchNode\cf0 ];\
+        \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 ----------        Stan Picking Up Right        ---------------\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf4 \ulnone \CocoaLigature0 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *stanFramesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *stanSpriteBatchNode;\
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+\cf0 .m code\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];    \cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 1\cf0 ; i < \cf12 5\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_pick_right_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 stanFramesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf10 // Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.40\cf0 ];\
+        \
+        \cf10 // Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+\
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_right_1.png"\cf0 ];\
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0 *\cf12 0.150f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+        [\cf5 stanSpriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 stanSpriteBatchNode\cf0 ];\
+        \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 ----------        Stan Picking Up Left        ---------------\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf4 \ulnone \CocoaLigature0 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *stanFramesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *stanSpriteBatchNode;\
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+\cf0 .m code\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];    \cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 stanFramesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 stanFramesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 stanSpriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 1\cf0 ; i < \cf12 5\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_pick_left_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 stanFramesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf10 // Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.40\cf0 ];\
+        \
+        \cf10 // Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+\
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_left_1.png"\cf0 ];\
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0 /\cf12 2\cf0 , screenSize.\cf7 height\cf0  * \cf12 0.33f\cf0 )];\
+        [\cf5 stanSpriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 stanSpriteBatchNode\cf0 ];\
+        \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 ----------        ORourke Walking Left        ---------------\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf8 \ulnone \CocoaLigature0 #import \cf11 "cocos2d.h"\cf8 \
+\pard\tx674\pardeftab674\pardirnatural
+\cf0 \
+\cf4 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *framesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *spriteBatchNode;\
+    \
+    \cf5 CCSprite\cf0  *oRourkeOriginalFrame;\
+\
+    \
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 .m code\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 framesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 framesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 spriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 framesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 framesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 spriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 2\cf0 ; i < \cf12 7\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_walk_right_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 framesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf7 NSMutableArray\cf0  *oRourkeWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  j = \cf12 2\cf0 ; j < \cf12 7\cf0 ; j++) \{\
+            \cf7 NSString\cf0  *oRourkeCurrentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"orourke_walk_in_%d.png"\cf0 , j];\
+            \cf4 id\cf0  frameObject = [\cf5 framesCache\cf0  \cf6 spriteFrameByName\cf0 :oRourkeCurrentFrameName];\
+            [oRourkeWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \
+        \cf10 // oRourke Animation object\cf0 \
+        \cf4 id\cf0  oRourkeAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :oRourkeWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \cf10 // oRourke Animation action\cf0 \
+        \cf4 id\cf0  oRourkeAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :oRourkeAnimObject];\
+        oRourkeAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :oRourkeAnimAction];\
+\
+        \
+        \cf10 // **** Stan Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \cf10 // **** Stan Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+        \cf10 // **** Stan Original frame\cf0 \
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_right_1.png"\cf0 ];\
+        \
+        \cf10 // oRourke Original frame\cf0 \
+        \cf5 oRourkeOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"orourke_walk_in_1.png"\cf0 ];\
+        \
+        \cf10 // oRourke Stan Position\cf0 \
+        [\cf5 oRourkeOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0  - \cf12 175.0f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+\
+        \
+        \cf10 // **** Stan Set  Position\cf0 \
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0 *\cf12 0.120f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+        \
+        \
+        \cf10 // Stan Orginal added to sprite batch node\cf0 \
+        [\cf5 spriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        \
+        \cf10 // oRourke Orginal added to sprite batch node\cf0 \
+        [\cf5 spriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 oRourkeOriginalFrame\cf0 ];\
+        \
+    \
+        \cf10 // Sprite batch node added to layer\cf0 \
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 spriteBatchNode\cf0 ];\
+        \
+        \cf10 // ** Stan Animation ran on Stan Original Frame\cf0 \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \cf10 // oRourke Animation ran on oRourke Original Frame\cf0 \
+        [\cf5 oRourkeOriginalFrame\cf0  \cf6 runAction\cf0 :oRourkeAnimAction];\
+        \
+        \
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 \
+----------        ORourke Walking Right        ---------------\
+\
+.h code:\
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf8 \ulnone \CocoaLigature0 #import \cf11 "cocos2d.h"\cf8 \
+\pard\tx674\pardeftab674\pardirnatural
+\cf0 \
+\cf4 @interface\cf0  LevelGameplay : \cf5 CCLayer\cf0 \{\
+    \cf5 CCSprite\cf0  *stanOriginalFrame;\
+    \cf5 CCSpriteFrameCache\cf0  *framesCache;\
+    \cf5 CCSpriteBatchNode\cf0  *spriteBatchNode;\
+    \
+    \cf5 CCSprite\cf0  *oRourkeOriginalFrame;\
+\
+    \
+\}
+\f0\fs48 \ul \CocoaLigature1 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 .m code\
+\pard\tx674\pardeftab674\pardirnatural
+\cf0 \
+
+\f1\fs28 \ulnone \CocoaLigature0 -(\cf4 id\cf0 )init\{\
+    \cf4 self\cf0  = [\cf4 super\cf0  \cf6 init\cf0 ];\
+    \cf4 if\cf0  (\cf4 self\cf0  != \cf4 nil\cf0 ) \{\
+        \cf7 CGSize\cf0  screenSize = [\cf5 CCDirector\cf0  \cf6 sharedDirector\cf0 ].\cf6 winSize\cf0 ;\
+        [\cf4 self\cf0  \cf6 setTouchEnabled\cf0 :\cf4 YES\cf0 ];\
+        \cf4 if\cf0  (\cf8 UI_USER_INTERFACE_IDIOM\cf0 () == \cf9 UIUserInterfaceIdiomPad\cf0 ) \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-ipadhd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-ipadhd.plist"];\cf0 \
+            \cf5 framesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 framesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-ipadhd.plist"\cf0 ];\
+            \cf5 spriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-ipadhd.png"\cf0 ];\
+            \
+        \}\cf4 else\cf0 \{\
+            \cf10 //stanOriginalFrame = [CCSprite spriteWithFile:@"stan_walk_right_1-widehd.png"];\cf0 \
+            \cf10 //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"characters-widehd.plist"];\cf0 \
+            \cf5 framesCache\cf0  = [\cf5 CCSpriteFrameCache\cf0  \cf6 sharedSpriteFrameCache\cf0 ];\
+            [\cf5 framesCache\cf0  \cf6 addSpriteFramesWithFile\cf0 :\cf11 @"characters-widehd.plist"\cf0 ];\
+            \cf5 spriteBatchNode\cf0  = [\cf5 CCSpriteBatchNode\cf0  \cf6 batchNodeWithFile\cf0 :\cf11 @"characters-widehd.png"\cf0 ];\
+        \}\
+        \
+        \cf10 // Array to hold frames for Stan walking right from sprite sheet.\cf0 \
+        \cf7 NSMutableArray\cf0  *stanWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  i = \cf12 2\cf0 ; i < \cf12 7\cf0 ; i++) \{\
+            \cf7 NSString\cf0  *currentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"stan_walk_right_%d.png"\cf0 , i];\
+            \cf4 id\cf0  frameObject = [\cf5 framesCache\cf0  \cf6 spriteFrameByName\cf0 :currentFrameName];\
+            [stanWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \cf7 NSMutableArray\cf0  *oRourkeWalkRightFrames = [\cf7 NSMutableArray\cf0  \cf9 array\cf0 ];\
+        \cf4 for\cf0  (\cf4 int\cf0  j = \cf12 2\cf0 ; j < \cf12 7\cf0 ; j++) \{\
+            \cf7 NSString\cf0  *oRourkeCurrentFrameName = [\cf7 NSString\cf0  \cf9 stringWithFormat\cf0 :\cf11 @"orourke_walk_out_%d.png"\cf0 , j];\
+            \cf4 id\cf0  frameObject = [\cf5 framesCache\cf0  \cf6 spriteFrameByName\cf0 :oRourkeCurrentFrameName];\
+            [oRourkeWalkRightFrames \cf9 addObject\cf0 :frameObject];\
+        \}\
+        \
+        \
+        \cf10 // oRourke Animation object\cf0 \
+        \cf4 id\cf0  oRourkeAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :oRourkeWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \cf10 // oRourke Animation action\cf0 \
+        \cf4 id\cf0  oRourkeAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :oRourkeAnimObject];\
+        oRourkeAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :oRourkeAnimAction];\
+\
+        \
+        \cf10 // **** Stan Animation object\cf0 \
+        \cf4 id\cf0  stanAnimObject = [\cf5 CCAnimation\cf0  \cf6 animationWithSpriteFrames\cf0 :stanWalkRightFrames \cf6 delay\cf0 :\cf12 0.25\cf0 ];\
+        \cf10 // **** Stan Animation action\cf0 \
+        \cf4 id\cf0  stanAnimAction = [\cf5 CCAnimate\cf0  \cf6 actionWithAnimation\cf0 :stanAnimObject];\
+        stanAnimAction = [\cf5 CCRepeatForever\cf0  \cf6 actionWithAction\cf0 :stanAnimAction];\
+        \
+        \cf10 // **** Stan Original frame\cf0 \
+        \cf5 stanOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"stan_walk_right_1.png"\cf0 ];\
+        \
+        \cf10 // oRourke Original frame\cf0 \
+        \cf5 oRourkeOriginalFrame\cf0  = [\cf5 CCSprite\cf0  \cf6 spriteWithSpriteFrameName\cf0 :\cf11 @"orourke_walk_out_1.png"\cf0 ];\
+        \
+        \cf10 // oRourke Stan Position\cf0 \
+        [\cf5 oRourkeOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0  - \cf12 175.0f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+\
+        \
+        \cf10 // **** Stan Set  Position\cf0 \
+        [\cf5 stanOriginalFrame\cf0  \cf6 setPosition\cf0 :\cf9 CGPointMake\cf0 (screenSize.\cf7 width\cf0 *\cf12 0.120f\cf0 , screenSize.\cf7 height\cf0 *\cf12 0.33f\cf0 )];\
+        \
+        \
+        \cf10 // Stan Orginal added to sprite batch node\cf0 \
+        [\cf5 spriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 stanOriginalFrame\cf0 ];\
+        \
+        \cf10 // oRourke Orginal added to sprite batch node\cf0 \
+        [\cf5 spriteBatchNode\cf0  \cf6 addChild\cf0 :\cf5 oRourkeOriginalFrame\cf0 ];\
+        \
+    \
+        \cf10 // Sprite batch node added to layer\cf0 \
+        [\cf4 self\cf0  \cf6 addChild\cf0 :\cf5 spriteBatchNode\cf0 ];\
+        \
+        \cf10 // ** Stan Animation ran on Stan Original Frame\cf0 \
+        [\cf5 stanOriginalFrame\cf0  \cf6 runAction\cf0 :stanAnimAction];\
+        \
+        \cf10 // oRourke Animation ran on oRourke Original Frame\cf0 \
+        [\cf5 oRourkeOriginalFrame\cf0  \cf6 runAction\cf0 :oRourkeAnimAction];\
+        \
+        \
+        \
+        \
+        \cf10 //[self addChild:stanOriginalFrame];2*/\cf0 \
+    \}\
+    \cf4 return\cf0  \cf4 self\cf0 ;\
+\}\
+\
+
+\f0\fs48 \ul \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+\cf0 \
+\
+\pard\tx674\pardeftab674\pardirnatural
+
+\f1\fs28 \cf0 \ulnone \CocoaLigature0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab674\pardirnatural
+
+\f0\fs48 \cf0 \ul \CocoaLigature1 \
+\
+}
